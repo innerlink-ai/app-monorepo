@@ -1,0 +1,61 @@
+@import url('https://fonts.googleapis.com/css2?family=Clash+Display:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+:root {
+  --background: #1A1C1E;
+  --sidebar-bg: #202224;
+  --chat-bg: #1A1C1E;
+  --text-color: #E6E8EA;
+  --border-color: #2E3033;
+  --button-bg: #2D2F31;
+  --button-hover: #383A3C;
+  --secondary-button-bg: #232527;
+  --secondary-text: #B8BDC3;
+  --user-message-bg: #2D2F31;
+  --bot-message-bg: #232527;
+  --dropdown-bg: #232527;
+  --prompt-bg: #2D2F31;
+  --sidebar-active: #2A2C2E;
+  --sidebar-hover: #25272A;
+  --sidebar-text: #E6E8EA;
+  --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.1);
+  --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="light"] {
+  --background: #ffffff;
+  --sidebar-bg: #fcfcfc;
+  --chat-bg: #ffffff;
+  --text-color: #1c1e21;
+  --border-color: #e5e7eb;
+  --button-bg: #f0f2f5;
+  --button-hover: #e4e6e8;
+  --secondary-button-bg: #ffffff;
+  --secondary-text: #65676B;
+  --user-message-bg: #f0f2f5;
+  --bot-message-bg: #ffffff;
+  --dropdown-bg: #ffffff;
+  --prompt-bg: #ffffff;
+  --sidebar-active: #e4e6e8;
+  --sidebar-hover: #f0f2f5;
+  --sidebar-text: #1c1e21;
+  --shadow-light: 0 2px 4px rgba(0, 0, 0, 0.05);
+  --shadow-medium: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Clash Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--background);
+  color: var(--text-color);
+  transition: all 0.2s ease-in-out;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
+}
+
+.font-space-grotesk {
+  font-family: 'Space Grotesk', sans-serif !important;
+  font-weight: 400;
+}

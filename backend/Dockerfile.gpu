@@ -1,0 +1,29 @@
+# Base image with CUDA support
+FROM nvidia/cuda:12.1.1-devel-ubuntu22.04
+
+
+RUN apt-get update && apt-get install -y netcat-traditional && rm -rf /var/lib/apt/lists/*
+
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y python3.10 python3-pip && rm -rf /var/lib/apt/lists/*
+
+# Install dependencies
+COPY requirements_gpu.txt .
+RUN pip install --no-cache-dir -r requirements_gpu.txt
+
+# Copy application code
+COPY ./app /app
+
+EXPOSE 8000
+
+RUN chmod +x ./scripts/start-script.sh
+#ENTRYPOINT ["./scripts/start-script.sh", "app-postgresql", "5432"]
+ENTRYPOINT ["./scripts/start-script.sh"]
+
+# Run FastAPI app
+#running this in entrypoint
+#CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+#CMD ["python", "main.py"]

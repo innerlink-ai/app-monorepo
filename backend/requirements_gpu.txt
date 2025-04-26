@@ -1,0 +1,35 @@
+fastapi
+uvicorn
+numpy
+torch==2.5.1
+#vllm==0.7.3
+sqlalchemy
+uvloop
+passlib[bcrypt]
+email-validator
+python-jose[cryptography]
+psycopg2-binary
+huggingface_hub
+text-generation
+httpx
+transformers
+
+
+python-multipart
+sentencepiece==0.1.99
+# Document parsing
+
+python-pptx==0.6.21  # For PPT extraction
+
+# Optional PostgreSQL extensions
+pgvector==0.2.1  # For more efficient vector search
+
+PyMuPDF>=1.23.0
+
+striprtf>=0.0.26
+PyPDF2>=2.10.0  # Fallback PDF processor
+redis>=4.5.1
+
+
+PyMuPDF>=1.24.0  # Or a specific version you need
+python-docx>=1.1.0 # Or a specific version you need

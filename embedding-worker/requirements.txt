@@ -1,0 +1,16 @@
+redis>=4.5.1
+FastAPI>=0.95.0
+uvicorn>=0.21.1
+pydantic>=1.10.7
+sqlalchemy>=2.0.9
+psycopg2-binary>=2.9.6
+transformers>=4.28.1
+torch>=2.0.0
+numpy>=1.24.2
+python-dotenv>=1.0.0
+PyMuPDF>=1.23.0
+python-docx>=0.8.11
+python-pptx>=0.6.21
+striprtf>=0.0.26
+
+

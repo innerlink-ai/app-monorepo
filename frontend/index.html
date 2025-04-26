@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- Remove the generic favicon that's causing the issue -->
+    <!-- <link rel="icon" type="image/svg+xml" href="/src/assets/logo.svg" /> -->
+    
+    <!-- Use these specifically for light/dark modes -->
+    <link rel="icon" type="image/svg+xml" href="/src/assets/logo-black.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/src/assets/logo-white.svg" media="(prefers-color-scheme: dark)" />
+    
+    <!-- Fallback option that's always black -->
+    <link rel="icon" type="image/svg+xml" href="/src/assets/logo-black.svg" />
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Innerlink</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
