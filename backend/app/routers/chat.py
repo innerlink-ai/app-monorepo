@@ -71,10 +71,11 @@ auth_token = os.getenv("HUGGINGFACE_TOKEN", "")
 login(token=os.getenv("HF_TOKEN"))
 
 # =============== CPU Model Config ===============
-if torch.cuda.is_available():
-    USE_CPU = False # os.getenv("USE_CPU", "False").lower() in ("true", "yes", "1", "on")  # Accept various true values
-else:
-    USE_CPU=True
+#if torch.cuda.is_available():
+    #USE_CPU = False # os.getenv("USE_CPU", "False").lower() in ("true", "yes", "1", "on")  # Accept various true values
+#else:
+    #USE_CPU=True
+USE_CPU=os.getenv("USE_CPU", "False").lower() in ("true", "yes", "1", "on")
 
 # =============== Pydantic Models ===============
 class Message(BaseModel):

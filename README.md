@@ -51,19 +51,21 @@ docker volume rm -f postgres_data
 ```
 docker login ghcr.io -u mattgorb -p password
 docker login ghcr.io -u mattgorb -p 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
+
+
 export PROJECT_NAME=innerlink
-docker build --no-cache  --platform linux/amd64 -t ghcr.io/mattgorb/${PROJECT_NAME}-frontend:latest ./app/frontend
-docker push ghcr.io/mattgorb/${PROJECT_NAME}-frontend:latest
+docker build --no-cache  --platform linux/amd64 -t ghcr.io/innerlink-ai/${PROJECT_NAME}-frontend:latest ./app-monorepo/frontend
+docker push ghcr.io/innerlink-ai/${PROJECT_NAME}-frontend:latest
 
 
-cd app/backend
-docker build --no-cache --platform linux/amd64 -t ghcr.io/mattgorb/${PROJECT_NAME}-backend:latest -f Dockerfile.gpu .
-docker push ghcr.io/mattgorb/${PROJECT_NAME}-backend:latest
+cd app-monorepo/backend
+docker build --no-cache --platform linux/amd64 -t ghcr.io/innerlink-ai/${PROJECT_NAME}-backend:latest -f Dockerfile.gpu .
+docker push ghcr.io/innerlink-ai/${PROJECT_NAME}-backend:latest
 
 
-cd app/embedding-worker
-docker build --no-cache --platform linux/amd64 -t ghcr.io/mattgorb/${PROJECT_NAME}-embedding-worker:latest -f Dockerfile.embedding_worker .
-docker push ghcr.io/mattgorb/${PROJECT_NAME}-embedding-worker:latest
+#cd app/embedding-worker
+#docker build --no-cache --platform linux/amd64 -t ghcr.io/mattgorb/${PROJECT_NAME}-embedding-worker:latest -f Dockerfile.embedding_worker .
+#docker push ghcr.io/mattgorb/${PROJECT_NAME}-embedding-worker:latest
 
 
 ```
