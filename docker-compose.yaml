@@ -1,31 +1,30 @@
 services:
-  backend:
-    build:
-      context: app/backend/
-      dockerfile: Dockerfile.cpu
-    ports:
-      - "8000:8000"
-    environment:
-      #DATABASE_URL: "postgresql://admin:SuperSecurePassword@postgres:5432/postgres"
+#  backend:
+#    build:
+#      context: app/backend/
+#      dockerfile: Dockerfile.cpu
+#    ports:
+#      - "8000:8000"
+#    environment:
+       #DATABASE_URL: "postgresql://admin:SuperSecurePassword@postgres:5432/postgres"
       #INITIAL_USER_EMAIL: matthewgorbett@gmail.com
       #EMAIL_DOMAIN_RESTRICTION: gmail.com
-      DOMAIN: localhost:5173
-      LLM: gpt2 #try whatever you want! phi1.5 is "microsoft/phi-1_5" on huggingface
-      ADMIN_DATABASE_URL: "postgresql://admin:SuperSecurePassword@host.docker.internal:5432/admin_db"
-      CHAT_DATABASE_URL: "postgresql://admin:SuperSecurePassword@host.docker.internal:5432/admin_db"
-      #COLLECTIONS_DATABASE_URL: "postgresql://admin:SuperSecurePassword@host.docker.internal:5432/collections_db"
-      HF_TOKEN: "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"
-      REDIS_URL: "redis://redis:6379/0"
-      DATA_DIR: '$HOME/data'
-      LOG_LEVEL: DEBUG
-      EMBEDDING_DIMENSION: "768"
-      EMBEDDING_MODEL_NAME: "intfloat/multilingual-e5-base"
-      EMBEDDING_CACHE_SIZE: "1"
-      VECTORDB_K: "2"
-    
-    entrypoint: ["./scripts/start-script.sh", "postgres", "5432", "--", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-    networks:
-      - app_network  # ✅ Attach to a named network
+#      DOMAIN: localhost:5173
+#      LLM: gpt2
+#      ADMIN_DATABASE_URL: "postgresql://admin:SuperSecurePassword@host.docker.internal:5432/admin_db"
+#      CHAT_DATABASE_URL: "postgresql://admin:SuperSecurePassword@host.docker.internal:5432/admin_db"
+#      SMTP_PASSWORD: "Q.+j6dB@ng^%TM4"
+#      HF_TOKEN: "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"
+#      USE_CPU:'true'
+#      DATA_DIR: '$HOME/data'
+#      LOG_LEVEL: DEBUG
+#      EMBEDDING_DIMENSION: "768"
+#      EMBEDDING_MODEL_NAME: "intfloat/multilingual-e5-base"
+#      EMBEDDING_CACHE_SIZE: "1"
+#      VECTORDB_K: "2"
+#    entrypoint: ["./scripts/start-script.sh", "postgres", "5432", "--", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+#      networks:
+#      - app_network  # ✅ Attach to a named network
 
   postgres:
     #image: postgres:15
@@ -46,7 +45,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./app/db/ddl/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./database/ddl/init.sql:/docker-entrypoint-initdb.d/init.sql
       - /Users/matthewgorbett/postgres-certs:/var/lib/postgresql/ssl/
     networks:
       - app_network  # ✅ Attach to the same network
@@ -73,8 +72,8 @@ services:
 
     ports:
       - "80:80"
-    depends_on:
-      - backend
+    #d#epends_on:
+    #  - backend
     networks:
       - app_network
     volumes:

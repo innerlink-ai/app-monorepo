@@ -270,7 +270,7 @@ const isCollapsed = computed(() => props.isCollapsed);
 
 // State variables
 const dropUpVisible = ref(false);
-const isDarkMode = ref(localStorage.getItem('theme') === 'dark' || !localStorage.getItem('theme'));
+const isDarkMode = ref(true); // Always start with dark mode
 const profileRef = ref<HTMLElement | null>(null);
 const showHistory = ref(false);
 const settingsButtonRef = ref<HTMLElement | null>(null);
@@ -348,8 +348,9 @@ onMounted(() => {
   document.addEventListener('click', handleClickOutside);
   window.addEventListener('resize', handleResize);
   chatStore.fetchRecentChats();
-  // Set initial theme
-  document.documentElement.setAttribute("data-theme", isDarkMode.value ? "dark" : "light");
+  // Set initial theme to dark
+  document.documentElement.setAttribute("data-theme", "dark");
+  localStorage.setItem('theme', 'dark');
 });
 
 onBeforeUnmount(() => {

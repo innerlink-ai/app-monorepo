@@ -6,15 +6,17 @@ docker-compose up  --build postgres
  pgadmin embedding-worker
 
 #Start Frontend (Terminal 1):
-cd app/frontend
+cd app-monorepo/frontend
 npm run dev
 
 #Start Backend (Terminal 2):
-cd app/backend/app
+cd app-monorepo/backend/app
 source activate backend
 source set_local.sh #should be same as vars set in docker-compose.yml
 bash scripts/start-script.sh localhost 5432
 
+
+#access at  http://localhost:5173/
 ```
 
 
@@ -57,7 +59,7 @@ export PROJECT_NAME=innerlink
 docker build --no-cache  --platform linux/amd64 -t ghcr.io/innerlink-ai/${PROJECT_NAME}-frontend:latest ./app-monorepo/frontend
 docker push ghcr.io/innerlink-ai/${PROJECT_NAME}-frontend:latest
 
-
+export PROJECT_NAME=innerlink
 cd app-monorepo/backend
 docker build --no-cache --platform linux/amd64 -t ghcr.io/innerlink-ai/${PROJECT_NAME}-backend:latest -f Dockerfile.gpu .
 docker push ghcr.io/innerlink-ai/${PROJECT_NAME}-backend:latest

@@ -5,12 +5,12 @@
       ref="chatBox"
       class="flex flex-col flex-1 overflow-y-auto overflow-x-hidden py-4 custom-scrollbar"
     >
-      <div v-for="(msg, index) in messages" :key="index" class="w-full mb-4">
+      <div v-for="(msg, index) in messages" :key="index" class="w-full mb-2">
         <!-- User Message -->
         <div v-if="msg.isUser" class="w-full" :class="sidebarStore.isCollapsed ? 'px-24' : 'px-32'">
           <div class="flex justify-end">
             <div 
-              class="relative bg-[var(--user-message-bg)] text-[var(--user-message-text)] p-4 rounded-2xl inline-block max-w-full mb-2"
+              class="relative bg-[var(--user-message-bg)] text-[var(--user-message-text)] p-4 rounded-2xl inline-block max-w-full mb-1"
             >
               <div
                 class="whitespace-pre-wrap break-words anywhere text-[15px] leading-relaxed pb-2"
@@ -49,7 +49,7 @@
         <div v-else class="w-full" :class="sidebarStore.isCollapsed ? 'px-24' : 'px-32'">
           <div class="flex justify-start">
             <div 
-              class="bg-[var(--chat-bg)] text-[var(--text-color)] p-4 rounded-2xl w-full"
+              class="bg-[var(--chat-bg)] text-[var(--text-color)] p-4 rounded-2xl w-full mb-1"
             >
               <!-- Thinking section (if available) -->
               <div v-if="hasThinking(msg.content)" class="mb-3">
@@ -79,12 +79,12 @@
            :class="sidebarStore.isCollapsed ? 'px-24' : 'px-32'">
         <div class="flex justify-start">
           <div 
-            class="bg-[var(--chat-bg)] text-[var(--text-color)] p-3 rounded-2xl"
+            class="bg-[var(--chat-bg)] text-[var(--text-color)] p-2 rounded-xl -mt-8"
           >
-            <div class="typing-indicator flex space-x-1.5 px-1">
-              <div class="w-2 h-2 bg-[var(--text-color)] rounded-full"></div>
-              <div class="w-2 h-2 bg-[var(--text-color)] rounded-full"></div>
-              <div class="w-2 h-2 bg-[var(--text-color)] rounded-full"></div>
+            <div class="typing-indicator flex space-x-1 px-1">
+              <div class="w-1.5 h-1.5 bg-[var(--text-color)] rounded-full opacity-50"></div>
+              <div class="w-1.5 h-1.5 bg-[var(--text-color)] rounded-full opacity-50"></div>
+              <div class="w-1.5 h-1.5 bg-[var(--text-color)] rounded-full opacity-50"></div>
             </div>
           </div>
         </div>
@@ -93,7 +93,7 @@
 
     <!-- Input Area -->
     <div 
-      class="flex flex-col py-6 relative min-w-0"
+      class="flex flex-col py-4 relative min-w-0"
       :class="sidebarStore.isCollapsed ? 'px-24' : 'px-32'"
     >
       <!-- Use ChatInputArea Component -->
@@ -831,19 +831,19 @@ const toggleMessageExpand = (index: number) => {
 /* Typing indicator animation */
 @keyframes blink {
   0%, 100% { transform: translateY(0); opacity: 0.3; }
-  50% { transform: translateY(-1px); opacity: 1; }
+  50% { transform: translateY(-1px); opacity: 0.7; }
 }
 
 .typing-indicator div {
-  animation: blink 1.2s ease-in-out infinite;
+  animation: blink 1s ease-in-out infinite;
 }
 
 .typing-indicator div:nth-child(2) {
-  animation-delay: 0.2s;
+  animation-delay: 0.15s;
 }
 
 .typing-indicator div:nth-child(3) {
-  animation-delay: 0.4s;
+  animation-delay: 0.3s;
 }
 
 .custom-scrollbar {

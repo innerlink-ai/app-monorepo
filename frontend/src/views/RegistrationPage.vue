@@ -1,10 +1,10 @@
 <template>
   <div class="flex h-screen items-center justify-center bg-[var(--background)]">
-    <div class="w-full max-w-md bg-[var(--chat-bg)] p-8 rounded-2xl shadow-lg mx-4">
+    <div class="w-full max-w-md bg-[var(--chat-bg)] p-6 pt-2 rounded-2xl shadow-lg mx-4 -mt-6">
       <!-- Show success message OR main content -->
       <div v-if="registrationSuccess">
         <!-- Header with New Logo (Success State) -->
-        <div class="flex items-center justify-center mb-8 gap-1">
+        <div class="flex items-center justify-center mb-3 gap-1">
           <div class="p-1 rounded-lg flex items-center justify-center" style="width: 32px; height: 32px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-color)" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
@@ -30,7 +30,7 @@
 
       <div v-else>
         <!-- Header with New Logo (Form State) -->
-        <div class="flex items-center justify-center mb-8 gap-1">
+        <div class="flex items-center justify-center mb-3 gap-1">
           <div class="p-1 rounded-lg flex items-center justify-center" style="width: 32px; height: 32px;">
             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-color)" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round">
               <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
@@ -45,11 +45,11 @@
         </div>
 
         <!-- Error Message (Invalid Invite) -->
-        <div v-if="inviteError" class="mb-6 text-red-500 text-center">
+        <div v-if="inviteError" class="mb-4 text-red-500 text-center">
           {{ inviteError }}
         </div>
 
-        <h2 v-else class="text-xl font-medium mb-6 text-center text-[var(--text-color)]">
+        <h2 v-else class="text-xl font-medium mb-4 text-center text-[var(--text-color)]">
           {{ isAdmin ? "Admin Registration" : "User Registration" }}
         </h2>
 

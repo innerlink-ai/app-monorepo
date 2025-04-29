@@ -400,6 +400,8 @@ async def generate_stream(request: ChatRequest, db: Session = Depends(get_admin_
 
     if use_cpu_mode:
         logger.debug("Calling fixed response stream service")
+        # Add a small delay to make the loading indicator visible
+        await asyncio.sleep(2.5)
         return await generate_with_fixed_stream(
             messages=messages, 
             user_prompt=request.prompt, 

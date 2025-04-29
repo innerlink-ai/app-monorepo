@@ -3,18 +3,22 @@ from email.mime.text import MIMEText
 import os
 
 # ✅ Use Gmail's SMTP settings
-SMTP_SERVER = "smtp.gmail.com"
+SMTP_SERVER = "smtp.office365.com"
 SMTP_PORT = 587
-SMTP_USER = "matthewgorbett@gmail.com"  # Replace with your Gmail address
-SMTP_PASSWORD = "jnszmtomgzjubmon"  # ✅ Use your App Password
+SMTP_USER = "mattgorbett@innerlinkai.com"  # Replace with your Gmail address
+SMTP_EMAIL_FROM_USER = "noreply@innerlinkai.com"  # Replace with your Gmail address
+
+#SMTP_PASSWORD = "Q.+j6dB@ng^%TM4"  # ✅ Use your App Password
+SMTP_PASSWORD=os.getenv('SMTP_PASSWORD', )
 DOMAIN= os.getenv('DOMAIN', "localhost:5173")
+
 
 def send_invite_email(email: str, token: str, is_admin: bool):
     """Sends an email invite for user/admin registration."""
     role_text = "admin" if is_admin else "user"
     subject = f"Your {role_text.capitalize()} Invite"
     
-    invite_link = f"https://{DOMAIN}/register?token={token}"
+    invite_link = f"http://{DOMAIN}/register?token={token}"
     body = (
         f"Hello,\n\nYou have been invited as a {role_text}. Click below to complete signup:\n"
         f"{invite_link}\n\nThis link expires in 2 days."
@@ -22,7 +26,7 @@ def send_invite_email(email: str, token: str, is_admin: bool):
 
     msg = MIMEText(body)
     msg["Subject"] = subject
-    msg["From"] = SMTP_USER
+    msg["From"] = SMTP_EMAIL_FROM_USER
     msg["To"] = email
 
     try:
@@ -51,7 +55,7 @@ def send_password_reset_email(email: str, token: str):
 
     msg = MIMEText(body)
     msg["Subject"] = subject
-    msg["From"] = SMTP_USER
+    msg["From"] = SMTP_EMAIL_FROM_USER
     msg["To"] = email
 
     try:
