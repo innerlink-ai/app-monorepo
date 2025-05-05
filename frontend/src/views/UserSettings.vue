@@ -21,18 +21,6 @@
         <div class="mb-8 border border-[var(--border-color)] rounded-lg p-6 bg-[var(--bg-color)]">
           <h2 class="text-sm font-semibold mb-4">Account Information</h2>
           <form @submit.prevent="updateSettings" class="flex flex-col gap-6">              
-            <!-- Name Field -->
-            <div class="flex flex-col gap-2">
-              <label class="text-sm font-medium text-[var(--text-color)]">Name</label>
-              <input
-                v-model="formData.name"
-                type="text"
-                class="w-full p-3 rounded-lg border border-[var(--border-color)] bg-[var(--prompt-bg)] text-[var(--text-color)] focus:outline-none focus:border-[var(--border-color-lighter)]"
-                placeholder="Your name"
-                autocomplete="name"
-              />
-            </div>
-
             <!-- Email Field (Read-only) -->
             <div class="flex flex-col gap-2">
               <label class="text-sm font-medium text-[var(--text-color)]">Email</label>
@@ -217,7 +205,6 @@ onMounted(() => {
 });
 
 const formData = ref({
-  name: '',
   email: '',
   newPassword: '',
   confirmPassword: '',
@@ -287,9 +274,6 @@ watch(() => formData.value.currentPassword, () => {
 });
 
 const isFormValid = computed(() => {
-  // Basic validation
-  if (formData.value.name.trim() === '') return false;
-  
   // Password validation
   if (formData.value.newPassword) {
     if (formData.value.newPassword !== formData.value.confirmPassword) return false;
@@ -315,7 +299,6 @@ const fetchUserData = async () => {
   try {
     isLoading.value = true;
     const userData = await getUserInfo();
-    formData.value.name = userData.name || '';
     formData.value.email = userData.email || '';
   } catch (err) {
     error.value = err instanceof Error ? err.message : 'Failed to load user data';
@@ -376,9 +359,7 @@ const saveChanges = async () => {
   
   try {
     // Ensure payload is correctly typed with UserUpdatePayload
-    const payload: UserUpdatePayload = {
-      name: formData.value.name,
-    };
+    const payload: UserUpdatePayload = { name: '' };
     
     // Only include password fields if changing password
     if (formData.value.newPassword) {

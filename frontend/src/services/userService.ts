@@ -5,7 +5,6 @@ import { config } from '@/config';
 const BASE_URL = config.apiUrl;
 
 interface RegisterPayload {
-  full_name: string;
   email: string;
   password: string;
   token: string | null;
@@ -22,8 +21,8 @@ interface UserInfo {
   is_admin: boolean;
 }
 
-interface UserUpdatePayload {
-  name: string;
+export interface UserUpdatePayload {
+  name?: string;
   newPassword?: string;
   currentPassword?: string;
   passwordStrength?: number;

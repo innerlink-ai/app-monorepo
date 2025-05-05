@@ -67,7 +67,7 @@ class MessageModel(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 # =============== Authentication ===============
-auth_token = os.getenv("HUGGINGFACE_TOKEN", "")
+
 login(token=os.getenv("HF_TOKEN"))
 
 # =============== CPU Model Config ===============

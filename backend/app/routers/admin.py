@@ -76,7 +76,7 @@ def invite_user(
     db.add(new_invite)
     db.commit()
     # ✅ Send invite email
-    send_invite_email(request.email, invite_token, request.is_admin)
+    #send_invite_email(request.email, invite_token, request.is_admin)
 
     return {"message": "Invitation sent successfully"}
 

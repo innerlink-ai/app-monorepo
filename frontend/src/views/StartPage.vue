@@ -45,7 +45,7 @@
             </div>
           </div>
           <p class="text-xs text-[var(--secondary-text)] mt-1">
-            A secure registration link will be sent to this address.
+            The email will be used as a username - no emails will be sent or ollected externally. 
           </p>
         </div>
 
@@ -131,7 +131,7 @@
         </div>
       </div>
 
-      <!-- Error Message Display with TypeScript Fix -->
+      <!-- Error Message Display -->
       <div 
         v-if="errorMessage" 
         class="mt-4 p-4 bg-red-100 text-red-700 rounded-lg border border-red-300 flex items-start"
@@ -176,7 +176,6 @@ const inviteSent = ref(false);
 const showConfirmation = ref(false);
 const isSystemInitialized = ref(false);
 
-// Fixed the TypeScript error by using a computed property instead
 const getErrorTitle = computed(() => {
   if (errorMessage.value && errorMessage.value.includes("Cannot create invite: users or invites already exist")) {
     return "System Already Initialized";
@@ -184,18 +183,31 @@ const getErrorTitle = computed(() => {
   return "Error";
 });
 
-// Step 1: Show confirmation dialog
-const confirmEmail = () => {
+const confirmEmail = async () => {
   if (!email.value || !email.value.includes('@')) {
     errorMessage.value = "Please enter a valid email address";
     return;
   }
   
   errorMessage.value = null;
-  showConfirmation.value = true;
+  isLoading.value = true;
+  
+  try {
+    const response = await firstUserService.createFirstUserInvite(email.value);
+    // Redirect to registration page with the token
+    router.push(`/register?token=${response.token}`);
+  } catch (error: any) {
+    console.error('Error creating invite:', error);
+    errorMessage.value = error.response?.data?.detail || "Failed to create invitation. Please try again.";
+    
+    if (errorMessage.value && errorMessage.value.includes("Cannot create invite: users or invites already exist")) {
+      isSystemInitialized.value = true;
+    }
+  } finally {
+    isLoading.value = false;
+  }
 };
 
-// Step 2: Create invite after confirmation
 const createFirstUserInvite = async () => {
   isLoading.value = true;
   errorMessage.value = null;
@@ -220,17 +232,7 @@ const createFirstUserInvite = async () => {
   }
 };
 
-// Navigate to login page
 const goToLogin = () => {
   router.push('/login');
-};
-
-// Reset form to try with a different email
-const resetForm = () => {
-  email.value = "";
-  errorMessage.value = null;
-  inviteSent.value = false;
-  showConfirmation.value = false;
-  isSystemInitialized.value = false;
 };
 </script>

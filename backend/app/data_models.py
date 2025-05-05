@@ -10,7 +10,7 @@ class User(AdminBase):
     __table_args__ = {"schema": "admin"}  # ✅ Store users in `admin` schema
 
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    full_name = Column(String, nullable=False)
+    full_name = Column(String, nullable=True)  # Made optional
     email = Column(String, unique=True, nullable=False)
     password_hash = Column(String, nullable=False)
     is_admin = Column(Boolean, default=False)  # ✅ Admin or Standard User (True/False)

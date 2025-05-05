@@ -22,4 +22,4 @@ def init_admin():
         )
         db.add(new_invite)
         db.commit()
-        send_invite_email(email=env_email, token=invite_token,is_admin=True )
+        #send_invite_email(email=env_email, token=invite_token,is_admin=True )

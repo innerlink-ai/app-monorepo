@@ -55,19 +55,6 @@
 
         <!-- Registration Form -->
         <form v-if="!inviteError" @submit.prevent="registerUser" class="space-y-5">
-        <!-- Full Name Field -->
-        <div>
-          <label for="fullName" class="block text-sm font-medium mb-2 text-[var(--text-color)]">Your Name</label>
-          <input
-            type="text"
-            id="fullName"
-            v-model="fullName"
-            required
-            class="w-full px-4 py-3 rounded-xl border border-[var(--border-color)] bg-[var(--prompt-bg)] text-[var(--text-color)] focus:outline-none focus:ring-2 focus:ring-[#55B867] transition-shadow duration-200"
-            placeholder="Enter your full name"
-          />
-        </div>
-
         <!-- Email Field -->
         <div>
           <label for="email" class="block text-sm font-medium mb-2 text-[var(--text-color)]">Email</label>
@@ -124,8 +111,6 @@
 </template>
 
 <script setup lang="ts">
-
-
 import { useAuthStore } from "../stores/authStore";
 import { verifyInvite, register } from "../services/userService"
 import { ref, onMounted, useRoute, useRouter } from '../composables/index'
@@ -133,7 +118,6 @@ const route = useRoute();
 const router = useRouter();
 const authStore = useAuthStore();
 
-const fullName = ref("");
 const email = ref("");
 const password = ref("");
 const isAdmin = ref(false);
@@ -141,6 +125,7 @@ const inviteToken = ref<string | null>(null);
 const inviteError = ref<string | null>(null);
 const errors = ref<{ general: string | null }>({ general: null });
 const registrationSuccess = ref(false);
+
 onMounted(async () => {
   const token = route.query.token as string | undefined;
 
@@ -151,7 +136,6 @@ onMounted(async () => {
 
   inviteToken.value = token;
   await fetchInviteDetails(token);
-
 });
 
 const fetchInviteDetails = async (token: string) => {
@@ -165,20 +149,16 @@ const fetchInviteDetails = async (token: string) => {
     console.error("Error fetching invite details:", error);
     inviteError.value = "Invalid or expired invite. Please request a new one.";
   }
-
-
 };
 
-// Update your registerUser function
 const registerUser = async () => {
-  if (!fullName.value || !email.value || !password.value) {
+  if (!email.value || !password.value) {
     errors.value.general = "Please fill out all fields.";
     return;
   }
 
   try {
     await register({
-      full_name: fullName.value,
       email: email.value,
       password: password.value,
       token: inviteToken.value,

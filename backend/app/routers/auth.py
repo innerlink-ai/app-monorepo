@@ -61,7 +61,6 @@ def get_invite_details(token: str, db: Session = Depends(get_admin_db)):
 
 # ✅ Pydantic model for user registration
 class RegisterUserRequest(BaseModel):
-    full_name: str
     email: EmailStr
     password: str
     token: str
@@ -69,7 +68,7 @@ class RegisterUserRequest(BaseModel):
 
 
 @router.post("/register")
-def register_user(response: Response,request: RegisterUserRequest, db: Session = Depends(get_admin_db)):
+def register_user(response: Response, request: RegisterUserRequest, db: Session = Depends(get_admin_db)):
     # ✅ Check if user already exists
     existing_user = db.query(User).filter(User.email == request.email).first()
     if existing_user:
@@ -85,15 +84,15 @@ def register_user(response: Response,request: RegisterUserRequest, db: Session =
 
     # ✅ Create and save the new user
     new_user = User(
-        full_name=request.full_name,
         email=request.email,
         password_hash=hash_password(request.password),
         is_admin=(access_role == "admin"),  # ✅ Convert role to boolean for admin access
     )
     db.add(new_user)
-    db.commit()
-
-    db.delete(invite)
+    
+    # Delete all pending invites for this email
+    db.query(Invite).filter(Invite.email == request.email).delete()
+    
     db.commit()
     
     access_token = create_access_token(data={"sub": new_user.email, "role": "admin" if new_user.is_admin else "user"}, expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
@@ -115,7 +114,6 @@ def register_user(response: Response,request: RegisterUserRequest, db: Session =
         samesite="Strict"
     )
     
-
     return {
         "message": "Registration successful",
     }
@@ -253,7 +251,6 @@ def create_invite(request: InviteRequest, db: Session = Depends(get_admin_db)):
         )
     
     # Create a new invite
-    #invite_token = secrets.token_urlsafe(32)
     invite_token = str(uuid.uuid4())
     invite = Invite(
         email=request.email,
@@ -262,14 +259,12 @@ def create_invite(request: InviteRequest, db: Session = Depends(get_admin_db)):
         access_role="admin"  # First user is always an admin
     )
 
-    send_invite_email(email=request.email, token=invite_token, is_admin=True)
-
     db.add(invite)
     db.commit()
     
     return {
         "message": "Invite created successfully",
-        "token": invite.token
+        "token": invite_token
     }
 
 
@@ -281,7 +276,7 @@ def create_invite(request: InviteRequest, db: Session = Depends(get_admin_db)):
 
 # Security model
 class UserUpdateRequest(BaseModel):
-    name: str
+    name: Optional[str] = None
     newPassword: Optional[str] = None
     currentPassword: Optional[str] = None
 
@@ -321,8 +316,9 @@ def update_user_info(
             # Update password
             user.password_hash = hash_password(update_request.newPassword)
         
-        # Update name
-        user.full_name = update_request.name
+        # Update name if provided
+        if update_request.name is not None:
+            user.full_name = update_request.name
         
         # Save changes - no explicit transaction needed
         db.commit()
@@ -422,3 +418,84 @@ def reset_password(payload: PasswordResetPayload, db: Session = Depends(get_admi
 
 
 # --- End Password Reset ---
+
+class GenerateRegistrationLinkRequest(BaseModel):
+    email: EmailStr
+    is_admin: bool
+    base_url: str
+
+@router.post("/admin/generate-registration-link")
+def generate_registration_link(
+    request: GenerateRegistrationLinkRequest,
+    db: Session = Depends(get_admin_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Generate a registration link for a new user."""
+    # Check if user is admin
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only administrators can generate registration links"
+        )
+    
+    # Check if user already exists
+    existing_user = db.query(User).filter(User.email == request.email).first()
+    if existing_user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="User with this email already exists"
+        )
+    
+    # Check if there's already a pending invite
+    existing_invite = db.query(Invite).filter(Invite.email == request.email).first()
+    if existing_invite:
+        # Delete the existing invite
+        db.delete(existing_invite)
+        db.commit()
+    
+    # Generate a new invite token
+    invite_token = str(uuid.uuid4())
+    
+    # Create new invite with the specified role
+    invite = Invite(
+        email=request.email,
+        token=invite_token,
+        expires_at=datetime.utcnow() + timedelta(hours=48),
+        access_role="admin" if request.is_admin else "user"
+    )
+    
+    db.add(invite)
+    db.commit()
+    
+    # Generate the registration URL using the provided base_url
+    registration_url = f"{request.base_url}/register?token={invite_token}"
+    
+    return {
+        "token": invite_token,
+        "registrationUrl": registration_url
+    }
+
+@router.get("/admin/invites")
+def get_pending_invites(
+    db: Session = Depends(get_admin_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Get all pending invites for unregistered emails."""
+    if not current_user.is_admin:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Only administrators can view pending invites"
+        )
+    
+    # Get all registered emails
+    registered_emails = {user.email for user in db.query(User).all()}
+    
+    # Get all invites and filter out those for registered emails
+    invites = db.query(Invite).all()
+    pending_invites = [
+        invite for invite in invites 
+        if invite.email not in registered_emails and datetime.utcnow() < invite.expires_at
+    ]
+
+    
+    return pending_invites

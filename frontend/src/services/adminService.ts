@@ -17,6 +17,7 @@ export interface Invite {
   access_role: string;
   created_at: string;
   expires_at: string;
+  token: string;
 }
 
 export interface InvitePayload {
@@ -24,21 +25,28 @@ export interface InvitePayload {
   is_admin: boolean;
 }
 
+export interface RegistrationLinkResponse {
+  token: string;
+  registrationUrl: string;
+}
+
 export const checkAdminAuth = async (): Promise<boolean> => {
   const authStore = useAuthStore();
   const router = useRouter();
 
   try {
-    await axios.get(`${BASE_URL}/admin/users`, { withCredentials: true });
-    if (authStore.isAdmin) {
-      return true;
-    } else {
+    // First check if user is authenticated and is an admin
+    if (!authStore.isAuthenticated || !authStore.isAdmin) {
       router.push("/");
       return false;
     }
+
+    // Then verify admin access with the backend
+    await axios.get(`${BASE_URL}/admin/users`, { withCredentials: true });
+    return true;
   } catch (error) {
     console.error("Authentication failed:", error);
-    router.push("/login");
+    router.push("/");
     return false;
   }
 };
@@ -82,6 +90,7 @@ export const fetchPendingInvites = async (): Promise<Invite[]> => {
     const response = await axios.get(`${BASE_URL}/admin/invites`, { 
       withCredentials: true 
     });
+    console.log(response.data);
     const currentTime = new Date();
     return response.data.filter((invite: Invite) => 
       new Date(invite.expires_at) > currentTime
@@ -109,6 +118,20 @@ export const resetSystem = async (): Promise<{ message: string }> => {
     console.error("Error calling reset system endpoint:", error);
     const message = error.response?.data?.detail || "Failed to reset system. Please check server logs.";
     throw new Error(message);
+  }
+};
+
+export const generateRegistrationLink = async (email: string, isAdmin: boolean): Promise<RegistrationLinkResponse> => {
+  try {
+    const frontendBaseUrl = window.location.origin;
+    const response = await axios.post(
+      `${BASE_URL}/admin/generate-registration-link`,
+      { email, is_admin: isAdmin, base_url: frontendBaseUrl },
+      { withCredentials: true }
+    );
+    return response.data;
+  } catch (error: any) {
+    throw new Error(error.response?.data?.detail || "Failed to generate registration link");
   }
 };
 
