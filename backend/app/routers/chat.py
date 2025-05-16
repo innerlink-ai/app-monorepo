@@ -13,9 +13,8 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from sqlalchemy import Column, String, DateTime, Boolean, ForeignKey, Text, JSON, text
 from sqlalchemy.ext.declarative import declarative_base
-from huggingface_hub import login
 import torch
-from transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer
+
 from threading import Thread
 import tempfile
 import httpx
@@ -67,8 +66,7 @@ class MessageModel(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
 
 # =============== Authentication ===============
-
-login(token=os.getenv("HF_TOKEN"))
+#login(token=os.getenv("HF_TOKEN"))
 
 # =============== CPU Model Config ===============
 #if torch.cuda.is_available():
