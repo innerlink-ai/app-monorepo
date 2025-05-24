@@ -1,9 +1,29 @@
+# Innerlink Application Monorepo
+
+This monorepo contains all the code for the Innerlink application, a secure enterprise AI platform. It is structured to manage different components of the application, including the frontend, backend, database, and embedding worker services, facilitating a cohesive development and deployment process.
+
+## Project Structure
+
+The monorepo is organized into the following main directories, each playing a distinct role in the application:
+
+*   `frontend/`: This directory contains the complete user interface (UI) code. It is built using **Vue.js**, a progressive JavaScript framework. The frontend is responsible for rendering the application in the user's web browser, managing user interactions, and communicating with the backend via API calls to fetch and display data, as well as to trigger backend operations.
+
+*   `backend/`: Houses the server-side logic, API endpoints, and core application functionality. Developed using **Python** with the **FastAPI** framework, the backend manages business logic, processes data, interacts with the PostgreSQL database, handles user authentication and authorization, and serves data to the frontend. It also likely interfaces with the AI model inference services (e.g., TGI - Text Generation Inference).
+
+*   `database/`: This directory includes all resources related to data persistence. It contains schema definitions for the **PostgreSQL** database, migration scripts (if used) to manage database schema changes over time, and potentially Docker configurations specifically for setting up and running the database service. The database stores critical information such as user accounts, chat histories, uploaded documents, metadata, and application state.
+
+*   `embedding-worker/`: This crucial component contains a dedicated service for handling computationally intensive tasks related to generating vector embeddings. For an AI platform like Innerlink, this worker would process documents uploaded by users to convert them into embeddings for Retrieval Augmented Generation (RAG) and generate embeddings for user queries to enable semantic search capabilities. This separation ensures that these intensive tasks do not block the main backend API.
+
+*   `docker-compose.yaml`: This file defines and configures the multi-container Docker application for local development and testing. It orchestrates the startup and networking of all the services (frontend, backend, database, embedding worker, and any other dependencies like Redis cache), ensuring a consistent and easily reproducible development environment. It specifies container images, ports, volumes, and environment variables.
+
+
+---
+
 Local Development: 
 ```
 #First start docker locally
 #Start DB and Redis Cache (Terminal 1):
 docker-compose up  --build postgres
- pgadmin embedding-worker
 
 #Start Frontend (Terminal 1):
 cd app-monorepo/frontend

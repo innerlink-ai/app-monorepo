@@ -321,6 +321,9 @@ async def generate_with_tgi_stream(
                     if buffer:
                         complete_response = clean_final_response("".join(buffer))
                         logger.info(f"Final response length: {len(complete_response)}")
+                        # Ensure the response ends with proper punctuation
+                        if complete_response and complete_response[-1] not in ".!?":
+                            complete_response += "."
                         save_messages_func(db, chat_id, user_prompt, complete_response)
                         logger.info(f"Saved TGI response to chat history")
                     else:
